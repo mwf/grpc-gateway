@@ -17,9 +17,11 @@ syntax = "proto3";
 package google.api;
 
 option cc_enable_arenas = true;
-option go_package = "google.golang.org/genproto/googleapis/api/annotations;annotations";
+// option go_package = "google.golang.org/genproto/googleapis/api/annotations;annotations";
+option go_package = "github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api;annotations";
+
 option java_multiple_files = true;
-option java_outer_classname = "HttpProto";
+option java_outer_classname = "XhttpProto";
 option java_package = "com.google.api";
 option objc_class_prefix = "GAPI";
 
@@ -27,11 +29,11 @@ option objc_class_prefix = "GAPI";
 // Defines the HTTP configuration for a service. It contains a list of
 // [HttpRule][google.api.HttpRule], each specifying the mapping of an RPC method
 // to one or more HTTP REST API methods.
-message Http {
+message Xhttp {
   // A list of HTTP configuration rules that apply to individual API methods.
   //
   // **NOTE:** All service configuration rules follow "last one wins" order.
-  repeated HttpRule rules = 1;
+  repeated XhttpRule rules = 1;
 }
 
 // `HttpRule` defines the mapping of an RPC method to one or more HTTP
@@ -240,7 +242,7 @@ message Http {
 // `pattern` field, such as HEAD, or "*" to leave the HTTP method unspecified for
 // a given URL path rule. The wild-card rule is useful for services that provide
 // content to Web (HTML) clients.
-message HttpRule {
+message XhttpRule {
   // Selects methods to which this rule applies.
   //
   // Refer to [selector][google.api.DocumentationRule.selector] for syntax details.
@@ -266,7 +268,7 @@ message HttpRule {
     string patch = 6;
 
     // Custom pattern is used for defining custom verbs.
-    CustomHttpPattern custom = 8;
+    XcustomHttpPattern custom = 8;
   }
 
   // The name of the request field whose value is mapped to the HTTP body, or
@@ -274,15 +276,16 @@ message HttpRule {
   // body. NOTE: the referred field must not be a repeated field and must be
   // present at the top-level of request message type.
   string body = 7;
+  string response = 9;
 
   // Additional HTTP bindings for the selector. Nested bindings must
   // not contain an `additional_bindings` field themselves (that is,
   // the nesting may only be one level deep).
-  repeated HttpRule additional_bindings = 11;
+  repeated XhttpRule additional_bindings = 11;
 }
 
 // A custom pattern is used for defining custom HTTP verb.
-message CustomHttpPattern {
+message XcustomHttpPattern {
   // The name of this custom HTTP verb.
   string kind = 1;
 

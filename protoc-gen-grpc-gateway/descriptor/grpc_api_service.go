@@ -2,7 +2,7 @@ package descriptor
 
 import (
 	"github.com/golang/protobuf/proto"
-	"google.golang.org/genproto/googleapis/api/annotations"
+	"github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api"
 )
 
 // GrpcAPIService represents a stripped down version of google.api.Service .
@@ -18,7 +18,7 @@ import (
 // our simplified version. These should be pretty stable too.
 type GrpcAPIService struct {
 	// Http Rule. Named Http in the actual proto. Changed to suppress linter warning.
-	HTTP *annotations.Http `protobuf:"bytes,9,opt,name=http" json:"http,omitempty"`
+	HTTP *annotations.Xhttp `protobuf:"bytes,9,opt,name=http" json:"http,omitempty"`
 }
 
 // ProtoMessage returns an empty GrpcAPIService element

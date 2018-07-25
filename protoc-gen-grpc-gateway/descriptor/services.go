@@ -6,9 +6,9 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
-	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway/httprule"
-	options "google.golang.org/genproto/googleapis/api/annotations"
+	options "github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api"
 )
 
 // loadServices registers services and their methods from "targetFile" to "r".
@@ -53,7 +53,7 @@ func (r *Registry) loadServices(file *File) error {
 	return nil
 }
 
-func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto, optsList []*options.HttpRule) (*Method, error) {
+func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto, optsList []*options.XhttpRule) (*Method, error) {
 	requestType, err := r.LookupMsg(svc.File.GetPackage(), md.GetInputType())
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto,
 		ResponseType:          responseType,
 	}
 
-	newBinding := func(opts *options.HttpRule, idx int) (*Binding, error) {
+	newBinding := func(opts *options.XhttpRule, idx int) (*Binding, error) {
 		var (
 			httpMethod   string
 			pathTemplate string
@@ -142,11 +142,14 @@ func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto,
 		if err != nil {
 			return nil, err
 		}
-
+		b.Response, err = r.newResponse(meth, opts.Response)
+		if err != nil {
+			return nil, err
+		}
 		return b, nil
 	}
 
-	applyOpts := func(opts *options.HttpRule) error {
+	applyOpts := func(opts *options.XhttpRule) error {
 		b, err := newBinding(opts, len(meth.Bindings))
 		if err != nil {
 			return err
@@ -178,7 +181,7 @@ func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto,
 	return meth, nil
 }
 
-func extractAPIOptions(meth *descriptor.MethodDescriptorProto) (*options.HttpRule, error) {
+func extractAPIOptions(meth *descriptor.MethodDescriptorProto) (*options.XhttpRule, error) {
 	if meth.Options == nil {
 		return nil, nil
 	}
@@ -189,7 +192,7 @@ func extractAPIOptions(meth *descriptor.MethodDescriptorProto) (*options.HttpRul
 	if err != nil {
 		return nil, err
 	}
-	opts, ok := ext.(*options.HttpRule)
+	opts, ok := ext.(*options.XhttpRule)
 	if !ok {
 		return nil, fmt.Errorf("extension is %T; want an HttpRule", ext)
 	}
@@ -238,6 +241,19 @@ func (r *Registry) newBody(meth *Method, path string) (*Body, error) {
 	return &Body{FieldPath: FieldPath(fields)}, nil
 }
 
+func (r *Registry) newResponse(meth *Method, path string) (*Body, error) {
+	msg := meth.ResponseType
+	switch path {
+	case "", "*":
+		return nil, nil
+	}
+	fields, err := r.resolveFieldPath(msg, path)
+	if err != nil {
+		return nil, err
+	}
+	return &Body{FieldPath: FieldPath(fields)}, nil
+}
+
 // lookupField looks up a field named "name" within "msg".
 // It returns nil if no such field found.
 func lookupField(msg *Message, name string) *Field {
@@ -277,9 +293,9 @@ func (r *Registry) resolveFieldPath(msg *Message, path string) ([]FieldPathCompo
 		if f == nil {
 			return nil, fmt.Errorf("no field %q found in %s", path, root.GetName())
 		}
-		if f.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED {
-			return nil, fmt.Errorf("repeated field not allowed in field path: %s in %s", f.GetName(), path)
-		}
+		// if f.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED {
+		// 	return nil, fmt.Errorf("repeated field not allowed in field path: %s in %s", f.GetName(), path)
+		// }
 		result = append(result, FieldPathComponent{Name: c, Target: f})
 	}
 	return result, nil

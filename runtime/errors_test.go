@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

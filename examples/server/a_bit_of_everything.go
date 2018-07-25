@@ -14,7 +14,7 @@ import (
 	sub "github.com/grpc-ecosystem/grpc-gateway/examples/proto/sub"
 	sub2 "github.com/grpc-ecosystem/grpc-gateway/examples/proto/sub2"
 	"github.com/rogpeppe/fastuuid"
-	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

@@ -15,7 +15,7 @@ proto_library(
 
 go_proto_library(
     name = "api_go_proto",
-    importpath = "google.golang.org/genproto/googleapis/api/annotations",
+    importpath = "github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api",
     proto = ":api_proto",
     deps = ["@com_github_golang_protobuf//protoc-gen-go/descriptor:go_default_library"],
 )
@@ -23,7 +23,7 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":api_go_proto"],
-    importpath = "google.golang.org/genproto/googleapis/api/annotations",
+    importpath = "github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api",
 )
 """
 

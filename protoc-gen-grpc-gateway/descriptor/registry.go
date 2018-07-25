@@ -9,7 +9,7 @@ import (
 	"github.com/golang/glog"
 	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
-	"google.golang.org/genproto/googleapis/api/annotations"
+	annotations "github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api"
 )
 
 // Registry is a registry of information extracted from plugin.CodeGeneratorRequest.
@@ -39,7 +39,7 @@ type Registry struct {
 	allowDeleteBody bool
 
 	// externalHttpRules is a mapping from fully qualified service method names to additional HttpRules applicable besides the ones found in annotations.
-	externalHTTPRules map[string][]*annotations.HttpRule
+	externalHTTPRules map[string][]*annotations.XhttpRule
 
 	// allowMerge generation one swagger file out of multiple protos
 	allowMerge bool
@@ -56,7 +56,7 @@ func NewRegistry() *Registry {
 		files:             make(map[string]*File),
 		pkgMap:            make(map[string]string),
 		pkgAliases:        make(map[string]string),
-		externalHTTPRules: make(map[string][]*annotations.HttpRule),
+		externalHTTPRules: make(map[string][]*annotations.XhttpRule),
 	}
 }
 
@@ -217,12 +217,12 @@ func (r *Registry) LookupFile(name string) (*File, error) {
 }
 
 // LookupExternalHTTPRules looks up external http rules by fully qualified service method name
-func (r *Registry) LookupExternalHTTPRules(qualifiedMethodName string) []*annotations.HttpRule {
+func (r *Registry) LookupExternalHTTPRules(qualifiedMethodName string) []*annotations.XhttpRule {
 	return r.externalHTTPRules[qualifiedMethodName]
 }
 
 // AddExternalHTTPRule adds an external http rule for the given fully qualified service method name
-func (r *Registry) AddExternalHTTPRule(qualifiedMethodName string, rule *annotations.HttpRule) {
+func (r *Registry) AddExternalHTTPRule(qualifiedMethodName string, rule *annotations.XhttpRule) {
 	r.externalHTTPRules[qualifiedMethodName] = append(r.externalHTTPRules[qualifiedMethodName], rule)
 }
 

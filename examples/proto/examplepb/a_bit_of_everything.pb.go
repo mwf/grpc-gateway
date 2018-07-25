@@ -12,7 +12,7 @@ import timestamp "github.com/golang/protobuf/ptypes/timestamp"
 import sub "github.com/grpc-ecosystem/grpc-gateway/examples/proto/sub"
 import sub2 "github.com/grpc-ecosystem/grpc-gateway/examples/proto/sub2"
 import _ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options"
-import _ "google.golang.org/genproto/googleapis/api/annotations"
+import _ "github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api"
 
 import (
 	context "golang.org/x/net/context"
