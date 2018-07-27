@@ -269,7 +269,7 @@ func renderMessagesAsDefinition(messages messageMap, d swaggerDefinitionsObject,
 				panic(err)
 			}
 
-			schema.Properties = append(schema.Properties, keyVal{f.GetName(), fieldValue})
+			schema.Properties = append(schema.Properties, keyVal{f.GetJsonName(), fieldValue})
 		}
 		d[fullyQualifiedNameToSwaggerName(msg.FQMN(), reg)] = schema
 	}
@@ -625,6 +625,23 @@ func renderServices(services []*descriptor.Service, paths swaggerPathsObject, re
 
 				methProtoPath := protoPathIndex(reflect.TypeOf((*pbdescriptor.ServiceDescriptorProto)(nil)), "Method")
 				desc := ""
+				var responseSchema swaggerSchemaObject
+
+				if b.Response == nil || len(b.Response.FieldPath) == 0 {
+					responseSchema = swaggerSchemaObject{
+						schemaCore: schemaCore{
+							Ref: fmt.Sprintf("#/definitions/%s", fullyQualifiedNameToSwaggerName(meth.ResponseType.FQMN(), reg)),
+						},
+					}
+				} else {
+					lastField := b.Response.FieldPath[len(b.Response.FieldPath)-1]
+					responseSchema = schemaOfField(lastField.Target, reg, customRefs)
+					if responseSchema.Description != "" {
+						desc = responseSchema.Description
+					} else {
+						desc = fieldProtoComments(reg, lastField.Target.Message, lastField.Target)
+					}
+				}
 				if meth.GetServerStreaming() {
 					desc += "(streaming responses)"
 				}
@@ -634,11 +651,7 @@ func renderServices(services []*descriptor.Service, paths swaggerPathsObject, re
 					Responses: swaggerResponsesObject{
 						"200": swaggerResponseObject{
 							Description: desc,
-							Schema: swaggerSchemaObject{
-								schemaCore: schemaCore{
-									Ref: fmt.Sprintf("#/definitions/%s", fullyQualifiedNameToSwaggerName(meth.ResponseType.FQMN(), reg)),
-								},
-							},
+							Schema:      responseSchema,
 						},
 					},
 				}

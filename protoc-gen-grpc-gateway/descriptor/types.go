@@ -175,6 +175,12 @@ type Binding struct {
 	PathParams []Parameter
 	// Body describes parameters provided in HTTP request body.
 	Body *Body
+	// Response describes field in response struct to marshal in HTTP response body.
+	Response *Body
+}
+
+func (b *Binding) ResponseBody() *Body {
+	return b.Response
 }
 
 // ExplicitParams returns a list of explicitly bound parameters of "b",
@@ -227,7 +233,7 @@ func (p Parameter) ConvertFuncExpr() (string, error) {
 	return conv, nil
 }
 
-// Body describes a http requtest body to be sent to the method.
+// Body describes a http request(response) body to be sent to the method(client).
 type Body struct {
 	// FieldPath is a path to a proto field which the request body is mapped to.
 	// The request body is mapped to the request type itself if FieldPath is empty.
