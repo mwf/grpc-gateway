@@ -302,7 +302,7 @@ func (r *Registry) resolveFieldPath(msg *Message, path string) ([]FieldPathCompo
 		if f == nil {
 			return nil, fmt.Errorf("no field %q found in %s", path, root.GetName())
 		}
-		if r.allowRepeatedFieldsInBody && f.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED {
+		if !r.allowRepeatedFieldsInBody && f.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED {
 			return nil, fmt.Errorf("repeated field not allowed in field path: %s in %s", f.GetName(), path)
 		}
 		result = append(result, FieldPathComponent{Name: c, Target: f})
