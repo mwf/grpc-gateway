@@ -269,7 +269,13 @@ func renderMessagesAsDefinition(messages messageMap, d swaggerDefinitionsObject,
 				panic(err)
 			}
 
-			schema.Properties = append(schema.Properties, keyVal{f.GetJsonName(), fieldValue})
+			kv := keyVal{Value: fieldValue}
+			if reg.GetUseJsonNameInSwaggerDef() {
+				kv.Key = f.GetJsonName()
+			} else {
+				kv.Key = f.GetName()
+			}
+			schema.Properties = append(schema.Properties, kv)
 		}
 		d[fullyQualifiedNameToSwaggerName(msg.FQMN(), reg)] = schema
 	}

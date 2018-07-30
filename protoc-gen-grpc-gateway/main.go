@@ -22,12 +22,14 @@ import (
 )
 
 var (
-	importPrefix         = flag.String("import_prefix", "", "prefix to be added to go package paths for imported proto files")
-	importPath           = flag.String("import_path", "", "used as the package if no input files declare go_package. If it contains slashes, everything up to the rightmost slash is ignored.")
-	registerFuncSuffix   = flag.String("register_func_suffix", "Handler", "used to construct names of generated Register*<Suffix> methods.")
-	useRequestContext    = flag.Bool("request_context", true, "determine whether to use http.Request's context or not")
-	allowDeleteBody      = flag.Bool("allow_delete_body", false, "unless set, HTTP DELETE methods may not have a body")
-	grpcAPIConfiguration = flag.String("grpc_api_configuration", "", "path to gRPC API Configuration in YAML format")
+	importPrefix              = flag.String("import_prefix", "", "prefix to be added to go package paths for imported proto files")
+	importPath                = flag.String("import_path", "", "used as the package if no input files declare go_package. If it contains slashes, everything up to the rightmost slash is ignored.")
+	registerFuncSuffix        = flag.String("register_func_suffix", "Handler", "used to construct names of generated Register*<Suffix> methods.")
+	useRequestContext         = flag.Bool("request_context", true, "determine whether to use http.Request's context or not")
+	allowDeleteBody           = flag.Bool("allow_delete_body", false, "unless set, HTTP DELETE methods may not have a body")
+	grpcAPIConfiguration      = flag.String("grpc_api_configuration", "", "path to gRPC API Configuration in YAML format")
+	allowRepeatedFieldsInBody = flag.Bool("allow_repeated_fields_in_body", false, "allows to use repeated field in `body` field of `google.api.http` annotation")
+	useJsonNameInSwaggerDef   = flag.Bool("json_name_in_swgdef", false, "if it sets Field.GetJsonName() will be used for generating swagger definitions, otherwise Field.GetName() will be used")
 )
 
 func main() {
@@ -74,6 +76,8 @@ func main() {
 	reg.SetPrefix(*importPrefix)
 	reg.SetImportPath(*importPath)
 	reg.SetAllowDeleteBody(*allowDeleteBody)
+	reg.SetAllowRepeatedFieldsInBody(*allowRepeatedFieldsInBody)
+	reg.SetUseJsonNameInSwaggerDef(*useJsonNameInSwaggerDef)
 	if err := reg.Load(req); err != nil {
 		emitError(err)
 		return

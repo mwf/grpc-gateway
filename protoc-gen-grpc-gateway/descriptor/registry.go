@@ -46,6 +46,13 @@ type Registry struct {
 
 	// mergeFileName target swagger file name after merge
 	mergeFileName string
+
+	// allowRepeatedFieldsInBody permits repeated field in body field path of `google.api.http` annotation option
+	allowRepeatedFieldsInBody bool
+
+	// useJsonNameInSwaggerDef if it true Field.GetJsonName() will be used for generating swagger definitions,
+	// otherwise Field.GetName() will be used
+	useJsonNameInSwaggerDef bool
 }
 
 // NewRegistry returns a new Registry.
@@ -316,6 +323,22 @@ func (r *Registry) IsAllowMerge() bool {
 // SetMergeFileName controls the target swagger file name out of multiple protos
 func (r *Registry) SetMergeFileName(mergeFileName string) {
 	r.mergeFileName = mergeFileName
+}
+
+// SetAllowRepeatedFieldsInBody controls whether repeated field can be used in body field path
+// of `google.api.http` annotation option or not
+func (r *Registry) SetAllowRepeatedFieldsInBody(allow bool) {
+	r.allowRepeatedFieldsInBody = allow
+}
+
+// SetUseJsonNameInSwaggerDef sets useJsonNameInSwaggerDef
+func (r *Registry) SetUseJsonNameInSwaggerDef(use bool) {
+	r.useJsonNameInSwaggerDef = use
+}
+
+// GetUseJsonNameInSwaggerDef whether generation one swagger file out of multiple protos
+func (r *Registry) GetUseJsonNameInSwaggerDef() bool {
+	return r.useJsonNameInSwaggerDef
 }
 
 // GetMergeFileName return the target merge swagger file name

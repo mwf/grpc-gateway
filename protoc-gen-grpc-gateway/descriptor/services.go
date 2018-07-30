@@ -144,13 +144,13 @@ func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto,
 		}
 
 		// Support HttpRule with response field.
-		// See https://github.com/doroginin/googleapis/blob/5539ecc567a5ddc1ee99c309f4c3530deeabcca1/google/api/http.proto#L303
+		// See https://github.com/googleapis/googleapis/pull/512/files
 		var httpRule interface{} = opts
 		type responseGetter interface {
-			GetResponse() string
+			GetResponseBody() string
 		}
 		if rg, ok := httpRule.(responseGetter); ok {
-			b.Response, err = r.newResponse(meth, rg.GetResponse())
+			b.Response, err = r.newResponse(meth, rg.GetResponseBody())
 			if err != nil {
 				return nil, err
 			}
@@ -302,9 +302,9 @@ func (r *Registry) resolveFieldPath(msg *Message, path string) ([]FieldPathCompo
 		if f == nil {
 			return nil, fmt.Errorf("no field %q found in %s", path, root.GetName())
 		}
-		// if f.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED {
-		// 	return nil, fmt.Errorf("repeated field not allowed in field path: %s in %s", f.GetName(), path)
-		// }
+		if r.allowRepeatedFieldsInBody && f.GetLabel() == descriptor.FieldDescriptorProto_LABEL_REPEATED {
+			return nil, fmt.Errorf("repeated field not allowed in field path: %s in %s", f.GetName(), path)
+		}
 		result = append(result, FieldPathComponent{Name: c, Target: f})
 	}
 	return result, nil
