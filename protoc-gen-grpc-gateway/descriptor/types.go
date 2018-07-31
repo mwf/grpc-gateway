@@ -179,6 +179,7 @@ type Binding struct {
 	Response *Body
 }
 
+// ResponseBody returns Fields whose value is mapped to the HTTP body of response.
 func (b *Binding) ResponseBody() *Body {
 	return b.Response
 }
@@ -235,8 +236,8 @@ func (p Parameter) ConvertFuncExpr() (string, error) {
 
 // Body describes a http request(response) body to be sent to the method(client).
 type Body struct {
-	// FieldPath is a path to a proto field which the request body is mapped to.
-	// The request body is mapped to the request type itself if FieldPath is empty.
+	// FieldPath is a path to a proto field which the request(response) body is mapped to.
+	// The request(response) body is mapped to the request(response) type itself if FieldPath is empty.
 	FieldPath FieldPath
 }
 
