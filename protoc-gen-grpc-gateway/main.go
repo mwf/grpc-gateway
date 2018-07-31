@@ -29,7 +29,6 @@ var (
 	allowDeleteBody           = flag.Bool("allow_delete_body", false, "unless set, HTTP DELETE methods may not have a body")
 	grpcAPIConfiguration      = flag.String("grpc_api_configuration", "", "path to gRPC API Configuration in YAML format")
 	allowRepeatedFieldsInBody = flag.Bool("allow_repeated_fields_in_body", false, "allows to use repeated field in `body` field of `google.api.http` annotation")
-	useJSONNameInSwaggerDef   = flag.Bool("json_name_in_swgdef", false, "if it sets Field.GetJsonName() will be used for generating swagger definitions, otherwise Field.GetName() will be used")
 )
 
 func main() {
@@ -77,7 +76,6 @@ func main() {
 	reg.SetImportPath(*importPath)
 	reg.SetAllowDeleteBody(*allowDeleteBody)
 	reg.SetAllowRepeatedFieldsInBody(*allowRepeatedFieldsInBody)
-	reg.SetUseJSONNameInSwaggerDef(*useJSONNameInSwaggerDef)
 	if err := reg.Load(req); err != nil {
 		emitError(err)
 		return
