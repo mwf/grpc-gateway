@@ -234,10 +234,11 @@ func (p Parameter) ConvertFuncExpr() (string, error) {
 	return conv, nil
 }
 
-// Body describes a http request(response) body to be sent to the method(client).
+// Body describes a http (request|response) body to be sent to the (method|client).
+// This is used in body and response_body options in google.api.HttpRule
 type Body struct {
-	// FieldPath is a path to a proto field which the request(response) body is mapped to.
-	// The request(response) body is mapped to the request(response) type itself if FieldPath is empty.
+	// FieldPath is a path to a proto field which the (request|response) body is mapped to.
+	// The (request|response) body is mapped to the (request|response) type itself if FieldPath is empty.
 	FieldPath FieldPath
 }
 

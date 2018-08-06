@@ -640,6 +640,7 @@ func renderServices(services []*descriptor.Service, paths swaggerPathsObject, re
 						},
 					}
 				} else {
+					// This is resolving the value of response_body in the google.api.HttpRule
 					lastField := b.Response.FieldPath[len(b.Response.FieldPath)-1]
 					responseSchema = schemaOfField(lastField.Target, reg, customRefs)
 					if responseSchema.Description != "" {
