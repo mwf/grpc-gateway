@@ -28,6 +28,7 @@ var (
 	useRequestContext         = flag.Bool("request_context", true, "determine whether to use http.Request's context or not")
 	allowDeleteBody           = flag.Bool("allow_delete_body", false, "unless set, HTTP DELETE methods may not have a body")
 	grpcAPIConfiguration      = flag.String("grpc_api_configuration", "", "path to gRPC API Configuration in YAML format")
+	pathType                  = flag.String("paths", "", "specifies how the paths of generated files are structured")
 	allowRepeatedFieldsInBody = flag.Bool("allow_repeated_fields_in_body", false, "allows to use repeated field in `body` field of `google.api.http` annotation")
 )
 
@@ -63,7 +64,7 @@ func main() {
 		}
 	}
 
-	g := gengateway.New(reg, *useRequestContext, *registerFuncSuffix)
+	g := gengateway.New(reg, *useRequestContext, *registerFuncSuffix, *pathType)
 
 	if *grpcAPIConfiguration != "" {
 		if err := reg.LoadGrpcAPIServiceFromYAML(*grpcAPIConfiguration); err != nil {
