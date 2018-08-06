@@ -336,13 +336,13 @@ func (r *Registry) IsAllowRepeatedFieldsInBody() bool {
 	return r.allowRepeatedFieldsInBody
 }
 
-// SetUseJSONNameInSwaggerDef sets useJSONNamesForFields
-func (r *Registry) SetUseJSONNameInSwaggerDef(use bool) {
+// SetUseJSONNamesForFields sets useJSONNamesForFields
+func (r *Registry) SetUseJSONNamesForFields(use bool) {
 	r.useJSONNamesForFields = use
 }
 
 // GetUseJSONNameInSwaggerDef returns useJSONNamesForFields
-func (r *Registry) GetUseJSONNameInSwaggerDef() bool {
+func (r *Registry) GetUseJSONNamesForFields() bool {
 	return r.useJSONNamesForFields
 }
 

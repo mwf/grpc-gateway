@@ -270,7 +270,7 @@ func renderMessagesAsDefinition(messages messageMap, d swaggerDefinitionsObject,
 			}
 
 			kv := keyVal{Value: fieldValue}
-			if reg.GetUseJSONNameInSwaggerDef() {
+			if reg.GetUseJSONNamesForFields() {
 				kv.Key = f.GetJsonName()
 			} else {
 				kv.Key = f.GetName()
