@@ -341,7 +341,7 @@ func (r *Registry) SetUseJSONNamesForFields(use bool) {
 	r.useJSONNamesForFields = use
 }
 
-// GetUseJSONNameInSwaggerDef returns useJSONNamesForFields
+// GetUseJSONNamesForFields returns useJSONNamesForFields
 func (r *Registry) GetUseJSONNamesForFields() bool {
 	return r.useJSONNamesForFields
 }
